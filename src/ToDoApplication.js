@@ -57,4 +57,23 @@ export default class ToDoApplication {
             this.projectList[i].updateProjectTask(taskId, taskName, description, dueDate, priority, isComplete);
         }
     }
+
+
+    // The below should return a list of the required tasks
+    getAllTasks() {
+        finalArr = [];
+        for (project of this.projectList) {
+            finalArr = finalArr.concat(project.taskList);
+        }
+        return finalArr;
+    }
+
+    getProjectTasks(projectId) {
+        const findInd = this.#findProjectIndex(projectId);
+        if (findInd < 0) {
+            return [];
+        } else {
+            return this.projectList[findInd].taskList;
+        }
+    }
 }
