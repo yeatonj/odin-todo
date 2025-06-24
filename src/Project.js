@@ -7,7 +7,7 @@ export default class Project {
         this.id = crypto.randomUUID();
     }
 
-    addTask(task) {
+    addTask(taskName, description, dueDate, priority) {
         const task = new Task(taskName, description, dueDate, priority, false, this.id);
         this.taskList.push(task);
         return task.id;
