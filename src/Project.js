@@ -1,3 +1,5 @@
+import Task from "./Task.js";
+
 export default class Project {
     constructor(projectName) {
         this.projectName = projectName;
@@ -6,8 +8,18 @@ export default class Project {
     }
 
     addTask(task) {
+        const task = new Task(taskName, description, dueDate, priority, false);
         this.taskList.push(task);
-        // maybe sort?
+        return task.id;
+    }
+
+    #findTaskIndex(taskId) {
+        for (var i = 0; i < this.taskList.length; i++) {
+            if (this.taskList[i].id === id) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     // Assumes that each task has an identifier
@@ -20,7 +32,39 @@ export default class Project {
         }
     }
 
-    sortTasks(sortFunc) {
-        this.taskList.sort(compareFunc);
+    toggleTaskCompletion(taskId) {
+        const findInd = this.#findTaskIndex(taskId);
+        if (findInd >= 0) {
+            this.taskList[findInd].toggleComplete();
+        }
     }
+
+    setTaskName(taskId, name) {
+        const findInd = this.#findTaskIndex(taskId);
+        if (findInd >= 0) {
+            this.taskList[findInd].taskName = name;
+        }
+    }
+
+    setTaskDueDate(taskId, date) {
+        const findInd = this.#findTaskIndex(taskId);
+        if (findInd >= 0) {
+            this.taskList[findInd].dueDate = date;
+        }
+    }
+
+    setTaskPriority(taskId, priority) {
+        const findInd = this.#findTaskIndex(taskId);
+        if (findInd >= 0) {
+            this.taskList[findInd].priority = priority;
+        }
+    }
+
+    setTaskDescription(taskId, description) {
+        const findInd = this.#findTaskIndex(taskId);
+        if (findInd >= 0) {
+            this.taskList[findInd].description = description;
+        }
+    }
+
 }
