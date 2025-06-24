@@ -15,7 +15,7 @@ export default class Project {
 
     #findTaskIndex(taskId) {
         for (var i = 0; i < this.taskList.length; i++) {
-            if (this.taskList[i].id === id) {
+            if (this.taskList[i].id === taskId) {
                 return i;
             }
         }

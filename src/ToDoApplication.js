@@ -48,35 +48,35 @@ export default class ToDoApplication {
     toggleTaskCompletion(projectId, taskId) {
         const findInd = this.#findProjectIndex(projectId);
         if (findInd >= 0) {
-            this.projectList[i].removeTask(taskId);
+            this.projectList[i].toggleTaskCompletion(taskId);
         }
     }
 
-    setTaskName(projectId, taskId) {
+    setTaskName(projectId, taskId, name) {
         const findInd = this.#findProjectIndex(projectId);
         if (findInd >= 0) {
-            //!!
+            this.projectList[i].setTaskName(taskId, name);
         }
     }
 
-    setTaskDueDate(projectId, taskId) {
+    setTaskDueDate(projectId, taskId, date) {
         const findInd = this.#findProjectIndex(projectId);
         if (findInd >= 0) {
-            //!!
+            this.projectList[i].setTaskDueDate(taskId, date);
         }
     }
 
-    setTaskPriority(projectId, taskId) {
+    setTaskPriority(projectId, taskId, priority) {
         const findInd = this.#findProjectIndex(projectId);
         if (findInd >= 0) {
-            //!!
+            this.projectList[i].setTaskPriority(taskId, priority);
         }
     }
 
-    setTaskDescription(projectId, taskId) {
+    setTaskDescription(projectId, taskId, description) {
         const findInd = this.#findProjectIndex(projectId);
         if (findInd >= 0) {
-            //!!
+            this.projectList[i].setTaskName(taskId, task, description);
         }
     }
 }
