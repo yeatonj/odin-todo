@@ -1,5 +1,4 @@
 import Project from "./Project.js";
-import DisplayManager from "./DisplayManager.js";
 
 export default class ToDoApplication {
     constructor() {

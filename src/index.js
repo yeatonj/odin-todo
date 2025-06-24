@@ -3,6 +3,7 @@ import "./styles.css";
 
 // Import module -----------
 import ToDoApplication from "./ToDoApplication.js";
+import DisplayManager from "./DisplayManager.js";
 
 // Add image -----------
 // import testImage from "./test.png";
