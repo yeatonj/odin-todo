@@ -14,31 +14,37 @@ export default class ToDoApplication {
         return proj.id;
     }
 
-    removeProject(id) {
-        // index at one to prevent removing default project
-        for (var i = 1; i < this.projectList.length; i++) {
+    #findProjectIndex(id) {
+        for (var i = 0; i < this.projectList.length; i++) {
             if (this.projectList[i].id === id) {
-                this.projectList.splice(i, 1);
-                return;
+                return i;
             }
         }
+        return -1;
+    }
+
+    removeProject(id) {
+        // index at one to prevent removing default project
+        const findInd = this.#findProjectIndex(id);
+        if (findInd < 1) {
+            return;
+        }
+        this.projectList.splice(i, 1);
     }
 
     addTaskToProject(projectId, taskName, description, dueDate, priority) {
-        for (var i = 0; i < this.projectList.length; i++) {
-            if (this.projectList[i].id === projectId) {
-                const task = new Task(taskName, description, dueDate, priority, false);
-                this.projectList[i].addTask(task);
-                return task.id;
-            }
+        const findInd = this.#findProjectIndex(projectId);
+        if (findInd >= 0) {
+            const task = new Task(taskName, description, dueDate, priority, false);
+            this.projectList[i].addTask(task);
+            return task.id;
         }
     }
 
     removeTask(projectId, taskId) {
-        for (var i = 0; i < this.projectList.length; i++) {
-            if (this.projectList[i].id === projectId) {
-                this.projectList[i].removeTask(taskId);
-            }
+        const findInd = this.#findProjectIndex(projectId);
+        if (findInd >= 0) {
+            this.projectList[i].removeTask(taskId);
         }
     }
 }
