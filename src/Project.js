@@ -39,31 +39,10 @@ export default class Project {
         }
     }
 
-    setTaskName(taskId, name) {
+    updateProjectTask(taskId, taskName, description, dueDate, priority, isComplete) {
         const findInd = this.#findTaskIndex(taskId);
         if (findInd >= 0) {
-            this.taskList[findInd].taskName = name;
-        }
-    }
-
-    setTaskDueDate(taskId, date) {
-        const findInd = this.#findTaskIndex(taskId);
-        if (findInd >= 0) {
-            this.taskList[findInd].dueDate = date;
-        }
-    }
-
-    setTaskPriority(taskId, priority) {
-        const findInd = this.#findTaskIndex(taskId);
-        if (findInd >= 0) {
-            this.taskList[findInd].priority = priority;
-        }
-    }
-
-    setTaskDescription(taskId, description) {
-        const findInd = this.#findTaskIndex(taskId);
-        if (findInd >= 0) {
-            this.taskList[findInd].description = description;
+            this.taskList[findInd].updateProjectTask(taskName, description, dueDate, priority, isComplete);
         }
     }
 
