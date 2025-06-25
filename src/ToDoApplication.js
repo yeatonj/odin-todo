@@ -69,7 +69,7 @@ export default class ToDoApplication {
     getAllTasks() {
         var finalArr = [];
         for (const project of this.projectList) {
-            finalArr = finalArr.concat(project.taskList);
+            finalArr.push([project.taskList, project.id]);
         }
         return finalArr;
     }
@@ -86,8 +86,16 @@ export default class ToDoApplication {
     getProjectList() {
         const projects = [];
         for (const project of this.projectList) {
-            projects.push(project.projectName);
+            projects.push([project.projectName, project.id]);
         }
         return projects;
+    }
+
+    getTaskFromIds(taskId, projectId) {
+        const projInd = this.#findProjectIndex(projectId);
+        if (projInd > -1) {
+            return this.projectList[projInd].getTaskFromId(taskId);
+        }
+        return null;
     }
 }

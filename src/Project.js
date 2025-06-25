@@ -46,4 +46,12 @@ export default class Project {
         }
     }
 
+    getTaskFromId(taskId) {
+        const findInd = this.#findTaskIndex(taskId);
+        if (findInd >= 0) {
+            return this.taskList[findInd];
+        }
+        return null;
+    }
+
 }
