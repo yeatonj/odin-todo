@@ -3,13 +3,19 @@ import Project from "./Project.js";
 export default class ToDoApplication {
     constructor() {
         this.projectList = [new Project("Unclassified Tasks")];
-        this.diplayManager = new DisplayManager();
     }
 
     addProject(name) {
         const proj = new Project(name);
         this.projectList.push(proj);
         return proj.id;
+    }
+
+    getProjectId(index) {
+        if (index >=0 && index < this.projectList.length) {
+            return this.projectList[index].id;
+        }
+        return null;
     }
 
     #findProjectIndex(id) {
@@ -33,36 +39,36 @@ export default class ToDoApplication {
     addTaskToProject(projectId, taskName, description, dueDate, priority) {
         const findInd = this.#findProjectIndex(projectId);
         if (findInd >= 0) {
-            return this.projectList[i].addTask(taskName, description, dueDate, priority);
+            return this.projectList[findInd].addTask(taskName, description, dueDate, priority);
         }
     }
 
     removeTask(projectId, taskId) {
         const findInd = this.#findProjectIndex(projectId);
         if (findInd >= 0) {
-            this.projectList[i].removeTask(taskId);
+            this.projectList[findInd].removeTask(taskId);
         }
     }
 
     toggleTaskCompletion(projectId, taskId) {
         const findInd = this.#findProjectIndex(projectId);
         if (findInd >= 0) {
-            this.projectList[i].toggleTaskCompletion(taskId);
+            this.projectList[findInd].toggleTaskCompletion(taskId);
         }
     }
 
     updateTask(projectId, taskId, taskName, description, dueDate, priority, isComplete) {
         const findInd = this.#findProjectIndex(projectId);
         if (findInd >= 0) {
-            this.projectList[i].updateProjectTask(taskId, taskName, description, dueDate, priority, isComplete);
+            this.projectList[findInd].updateProjectTask(taskId, taskName, description, dueDate, priority, isComplete);
         }
     }
 
 
     // The below should return a list of the required tasks
     getAllTasks() {
-        finalArr = [];
-        for (project of this.projectList) {
+        var finalArr = [];
+        for (const project of this.projectList) {
             finalArr = finalArr.concat(project.taskList);
         }
         return finalArr;
@@ -75,5 +81,13 @@ export default class ToDoApplication {
         } else {
             return this.projectList[findInd].taskList;
         }
+    }
+
+    getProjectList() {
+        const projects = [];
+        for (const project of this.projectList) {
+            projects.push(project.projectName);
+        }
+        return projects;
     }
 }
