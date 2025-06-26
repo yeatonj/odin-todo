@@ -27,54 +27,109 @@ class Controller {
 
     expandTaskCallback(taskId, projectId) {
         // Get the task info from the app and pass back to the display manager
-        this.dispManager.expandTask(taskId, this.app.getTaskFromIds(taskId, projectId), this.submitEditTaskCallback.bind(this), this.cancelEditTaskCallback.bind(this), this.app.removeTask.bind(this.app));
+        this.dispManager.expandTask(taskId, 
+            this.app.getTaskFromIds(taskId, 
+                projectId), 
+                this.submitEditTaskCallback.bind(this), 
+                this.cancelEditTaskCallback.bind(this), 
+                this.app.removeTask.bind(this.app));
     }
 
     submitEditTaskCallback(taskId, projectId, taskName, description, dueDate, priority, isComplete) {
         this.app.updateTask(projectId, taskId, taskName, description, dueDate, priority, isComplete);
-        this.dispManager.collapseTask(taskId, this.app.getTaskFromIds(taskId, projectId), this.expandTaskCallback.bind(this));
+        this.dispManager.collapseTask(taskId, 
+            this.app.getTaskFromIds(taskId, projectId), 
+            this.expandTaskCallback.bind(this));
     }
 
     cancelEditTaskCallback(taskId, projectId) {
-        this.dispManager.collapseTask(taskId, this.app.getTaskFromIds(taskId, projectId), this.expandTaskCallback.bind(this));
+        this.dispManager.collapseTask(taskId, 
+            this.app.getTaskFromIds(taskId, projectId), 
+            this.expandTaskCallback.bind(this));
     }
 
     addProjectCallback(projectName) {
         this.app.addProject(projectName);
-        this.dispManager.redrawProjectSidebar(this.app.getProjectList(), this.addProjectCallback.bind(this), this.unfilteredProjectCallback.bind(this), this.filteredProjectCallback.bind(this), this.deleteProjectCallback.bind(this));
+        this.dispManager.redrawProjectSidebar(this.app.getProjectList(), 
+            this.addProjectCallback.bind(this), 
+            this.unfilteredProjectCallback.bind(this), 
+            this.filteredProjectCallback.bind(this), 
+            this.deleteProjectCallback.bind(this));
     }
 
     unfilteredProjectCallback() {
         this.activeProject = null;
-        this.dispManager.redrawActiveTasks(this.app.getAllTasks(), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app), this.getActiveProjectName());
+        this.dispManager.redrawActiveTasks(this.app.getAllTasks(), 
+            this.expandTaskCallback.bind(this), 
+            this.addTaskCallback.bind(this), 
+            this.app.getProjectList.bind(this.app), 
+            this.toggleCallback.bind(this), 
+            this.getActiveProjectName());
     }
 
     filteredProjectCallback(projectId) {
         this.activeProject = projectId;
-        this.dispManager.redrawActiveTasks(this.app.getProjectTasks(projectId), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app), this.getActiveProjectName());
+        this.dispManager.redrawActiveTasks(this.app.getProjectTasks(projectId), 
+            this.expandTaskCallback.bind(this), 
+            this.addTaskCallback.bind(this), 
+            this.app.getProjectList.bind(this.app), 
+            this.toggleCallback.bind(this), 
+            this.getActiveProjectName());
     }
 
     addTaskCallback(taskName, description, project, dueDate, priority) {
         this.app.addTaskToProject(project, taskName, description, dueDate, priority);
         // redraw task window for active task
         if (this.activeProject === null) {
-            this.dispManager.redrawActiveTasks(this.app.getAllTasks(), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app), this.getActiveProjectName());
+            this.dispManager.redrawActiveTasks(this.app.getAllTasks(), 
+                this.expandTaskCallback.bind(this), 
+                this.addTaskCallback.bind(this), 
+                this.app.getProjectList.bind(this.app), 
+                this.toggleCallback.bind(this), 
+                this.getActiveProjectName());
         } else {
-            this.dispManager.redrawActiveTasks(this.app.getProjectTasks(this.activeProject), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app), this.getActiveProjectName());
+            this.dispManager.redrawActiveTasks(this.app.getProjectTasks(this.activeProject), 
+                this.expandTaskCallback.bind(this), 
+                this.addTaskCallback.bind(this), 
+                this.app.getProjectList.bind(this.app), 
+                this.toggleCallback.bind(this), 
+                this.getActiveProjectName());
         }
     }
 
     deleteProjectCallback(projectId) {
         this.app.removeProject(projectId);
-        this.dispManager.redrawProjectSidebar(this.app.getProjectList(), this.addProjectCallback.bind(this), this.unfilteredProjectCallback.bind(this), this.filteredProjectCallback.bind(this), this.deleteProjectCallback.bind(this));
+        this.dispManager.redrawProjectSidebar(this.app.getProjectList(), 
+            this.addProjectCallback.bind(this), 
+            this.unfilteredProjectCallback.bind(this), 
+            this.filteredProjectCallback.bind(this), 
+            this.deleteProjectCallback.bind(this));
         if (this.activeProject === projectId || this.activeProject === null) {
-            this.dispManager.redrawActiveTasks(this.app.getAllTasks(), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app), this.getActiveProjectName());
+            this.dispManager.redrawActiveTasks(this.app.getAllTasks(), 
+                this.expandTaskCallback.bind(this), 
+                this.addTaskCallback.bind(this), 
+                this.app.getProjectList.bind(this.app),
+                this.toggleCallback.bind(this),  
+                this.getActiveProjectName());
         }
     }
 
     initialDraw() {
-        this.dispManager.redrawProjectSidebar(this.app.getProjectList(), this.addProjectCallback.bind(this), this.unfilteredProjectCallback.bind(this), this.filteredProjectCallback.bind(this), this.deleteProjectCallback.bind(this));
-        this.dispManager.redrawActiveTasks(this.app.getAllTasks(), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app), this.getActiveProjectName());
+        this.dispManager.redrawProjectSidebar(this.app.getProjectList(), 
+            this.addProjectCallback.bind(this), 
+            this.unfilteredProjectCallback.bind(this), 
+            this.filteredProjectCallback.bind(this), 
+            this.deleteProjectCallback.bind(this));
+        this.dispManager.redrawActiveTasks(this.app.getAllTasks(), 
+            this.expandTaskCallback.bind(this), 
+            this.addTaskCallback.bind(this), 
+            this.app.getProjectList.bind(this.app), 
+            this.toggleCallback.bind(this), 
+            this.getActiveProjectName());
+    }
+
+    toggleCallback(taskId, projectId) {
+        this.app.toggleTaskCompletion(projectId, taskId);
     }
 }
 

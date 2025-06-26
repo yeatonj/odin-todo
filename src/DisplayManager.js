@@ -4,7 +4,7 @@ export default class DisplayManager {
         this.controller = controller;
     }
 
-    redrawActiveTasks(taskList, expandCallback, addTaskCallback, projectCallback, projectName) {
+    redrawActiveTasks(taskList, expandCallback, addTaskCallback, projectCallback, toggleCallback, projectName) {
         // Called when we apply a filter of some sort to redraw the main task window
         // tasklist should simply be an array of tasks
 
@@ -33,7 +33,7 @@ export default class DisplayManager {
             taskCard.classList.add("collapsed");
             taskCard.dataset.id = task.id;
 
-            this.#drawCollapsedTask(task, taskCard, expandCallback);
+            this.#drawCollapsedTask(task, taskCard, expandCallback, toggleCallback);
             taskContainer.appendChild(taskCard);
         }
 
@@ -47,7 +47,7 @@ export default class DisplayManager {
 
     }
 
-    #drawCollapsedTask(task, taskCard, expandCallback) {
+    #drawCollapsedTask(task, taskCard, expandCallback, toggleCallback) {
         const taskName = document.createElement("p");
         taskName.textContent = task.taskName;
         const dueDate = document.createElement("p");
@@ -55,12 +55,23 @@ export default class DisplayManager {
         const priority = document.createElement("div");
         priority.textContent = task.priority;
         const completeButton = document.createElement("button");
+        completeButton.classList.add("completion-toggle");
         if (task.isComplete) {
             completeButton.classList.add("complete");
+            taskCard.classList.add("strike");
         }
         else {
             completeButton.classList.add("incomplete");
         }
+        completeButton.addEventListener("click", () => {
+            toggleCallback(task.id, task.projectId);
+            const selectorString = '[data-id="' + task.id +'"]' + '>.completion-toggle';
+            console.log(selectorString);
+            const button = document.querySelector(selectorString);
+            button.classList.toggle("complete");
+            button.classList.toggle("incomplete");
+            taskCard.classList.toggle("strike");
+        });
         const expandButton = document.createElement("button");
         expandButton.textContent = "Expand";
         expandButton.addEventListener("click", () => {
