@@ -14,6 +14,7 @@ class Controller {
     constructor() {
         this.app = new ToDoApplication();
         this.dispManager = new DisplayManager(this);
+        this.activeProject = null;
     }
 
     expandTaskCallback(taskId, projectId) {
@@ -36,11 +37,24 @@ class Controller {
     }
 
     unfilteredProjectCallback() {
-        this.dispManager.redrawActiveTasks(this.app.getAllTasks(), this.expandTaskCallback.bind(this));
+        this.activeProject = null;
+        this.dispManager.redrawActiveTasks(this.app.getAllTasks(), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app));
     }
 
     filteredProjectCallback(projectId) {
-        this.dispManager.redrawActiveTasks(this.app.getProjectTasks(projectId), this.expandTaskCallback.bind(this));
+        this.activeProject = projectId;
+        this.dispManager.redrawActiveTasks(this.app.getProjectTasks(projectId), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app));
+    }
+
+    addTaskCallback(taskName, description, project, dueDate, priority) {
+        this.app.addTaskToProject(project, taskName, description, dueDate, priority);
+        // redraw task window for active task
+        if (this.activeProject === null) {
+            this.dispManager.redrawActiveTasks(this.app.getAllTasks(), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app));
+        } else {
+            this.dispManager.redrawActiveTasks(this.app.getProjectTasks(this.activeProject), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app));
+        }
+
     }
 }
 
@@ -64,4 +78,4 @@ controller.app.addTaskToProject(controller.app.getProjectId(2), "todo app", "for
 controller.dispManager.redrawProjectSidebar(controller.app.getProjectList(), controller.addProjectCallback.bind(controller), controller.unfilteredProjectCallback.bind(controller), controller.filteredProjectCallback.bind(controller));
 
 // Draw tasks
-controller.dispManager.redrawActiveTasks(controller.app.getAllTasks(), controller.expandTaskCallback.bind(controller));
+controller.dispManager.redrawActiveTasks(controller.app.getAllTasks(), controller.expandTaskCallback.bind(controller), controller.addTaskCallback.bind(controller), controller.app.getProjectList.bind(controller.app));

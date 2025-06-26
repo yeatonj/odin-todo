@@ -4,10 +4,9 @@ export default class DisplayManager {
         this.controller = controller;
     }
 
-    redrawActiveTasks(taskList, expandCallback) {
+    redrawActiveTasks(taskList, expandCallback, addTaskCallback, projectCallback) {
         // Called when we apply a filter of some sort to redraw the main task window
         // tasklist should simply be an array of tasks
-        console.log(taskList);
 
         const header = document.querySelector("#task-header");
         while (header.firstChild) {
@@ -35,6 +34,10 @@ export default class DisplayManager {
 
         const addButton = document.createElement("button");
         addButton.textContent = "Add Task";
+        addButton.id = "add-task";
+        addButton.addEventListener("click", () => {
+            this.expandAddTask(addTaskCallback, projectCallback);
+        })
         taskContainer.appendChild(addButton);
 
     }
@@ -64,12 +67,6 @@ export default class DisplayManager {
         taskCard.appendChild(priority);
         taskCard.appendChild(completeButton);
         taskCard.appendChild(expandButton);
-    }
-
-    redrawSingleTask(taskId, task) {
-        // Called when we want to redraw a task without expanding or collapsing (for example, toggling complete). Might be called after collapsing
-        console.log(taskId);
-        console.log(task);
     }
 
     expandTask(taskId, task, submitCallback, cancelCallback) {
@@ -193,7 +190,7 @@ export default class DisplayManager {
         cancel.addEventListener("click", (event) => {
             event.preventDefault();
             cancelCallback(task.id, task.projectId);
-        })
+        });
 
         inputForm.appendChild(submit);
         inputForm.appendChild(cancel);
@@ -220,12 +217,127 @@ export default class DisplayManager {
         console.log(taskId, projectId, task);
     }
 
-    expandAddTask() {
+    expandAddTask(addCallback, projectCallback) {
         // Called when we are adding a task at the bottom of the screen
+        const taskContainer = document.querySelector("#task-container");
+        // Hide add button
+        const addButton = document.querySelector("#add-task");
+        addButton.style.visibility = "hidden";
+        
+        const inputForm = document.createElement("form");
+        inputForm.id = "add-form";
+        const head = document.createElement("h3");
+        head.textContent = "New Task Details:";
+        inputForm.appendChild(head);
+        // Task Name
+        const nameLabel = document.createElement("label");
+        nameLabel.htmlFor = "name";
+        nameLabel.textContent = "Task Name:";
+        const nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.name = "name";
+        nameInput.id = "name";
+        nameInput.required = true;
+        inputForm.appendChild(nameLabel);
+        inputForm.appendChild(nameInput);
+
+        // Project
+        const curProjects = projectCallback();
+
+        const projectLabel = document.createElement("label");
+        projectLabel.htmlFor = "project";
+        projectLabel.textContent = "Project:";
+        const projectInput = document.createElement("select");
+        projectInput.name = "priority";
+        projectInput.id = "priority";
+
+        for (var i = 0; i < curProjects.length; i++) {
+            const proj = document.createElement("option");
+            proj.value = curProjects[i][1];
+            proj.textContent = curProjects[i][0];
+            projectInput.appendChild(proj);
+        }
+        inputForm.appendChild(projectLabel);
+        inputForm.appendChild(projectInput);
+
+        // Due Date
+        const dateLabel = document.createElement("label");
+        dateLabel.htmlFor = "due-date";
+        dateLabel.textContent = "Due Date:";
+        const dateInput = document.createElement("input");
+        dateInput.type = "date";
+        dateInput.name = "due-date";
+        dateInput.id = "due-date";
+        inputForm.appendChild(dateLabel);
+        inputForm.appendChild(dateInput);
+
+        // Description
+        const descrLabel = document.createElement("label");
+        descrLabel.htmlFor = "descr";
+        descrLabel.textContent = "Description:";
+        const descrInput = document.createElement("textarea");
+        descrInput.name = "descr";
+        descrInput.id = "descr";
+        descrInput.rows = 5;
+        descrInput.cols = 40;
+        inputForm.appendChild(descrLabel);
+        inputForm.appendChild(descrInput);
+
+        // Priority
+        const priorLabel = document.createElement("label");
+        priorLabel.htmlFor = "priority";
+        priorLabel.textContent = "Priority:";
+        const priorInput = document.createElement("select");
+        priorInput.name = "priority";
+        priorInput.id = "priority";
+        for (var i = 1; i < 4; i++) {
+            const prior = document.createElement("option");
+            prior.value = i;
+            prior.textContent = String(i);
+            priorInput.appendChild(prior);
+        }
+        // priorInput.value = task.priority;
+        inputForm.appendChild(priorLabel);
+        inputForm.appendChild(priorInput);
+        
+
+        const submit = document.createElement("button");
+        submit.textContent = "Add Task";
+        submit.type = "submit";
+        submit.addEventListener("click", (event) => {
+            event.preventDefault();
+            addCallback(
+                nameInput.value, 
+                descrInput.value, 
+                projectInput.value,
+                dateInput.value, 
+                priorInput.value
+            );
+        });
+
+        const cancel = document.createElement("button");
+        cancel.classList.add("cancel");
+        cancel.textContent = "Cancel";
+        cancel.addEventListener("click", (event) => {
+            event.preventDefault();
+            this.collapseAddTask();
+        })
+
+        inputForm.appendChild(submit);
+        inputForm.appendChild(cancel);
+
+        taskContainer.append(inputForm);
     }
 
     collapseAddTask() {
         // Called when we are done adding a task at the bottom of the screen
+        const addForm = document.querySelector("#add-form");
+        addForm.remove();
+        const taskContainer = document.querySelector("#task-container");
+        // Hide add button
+        const addButton = document.querySelector("#add-task");
+        taskContainer.appendChild(addButton);
+        addButton.style.visibility = "visible";
 
     }
 
