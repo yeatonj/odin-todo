@@ -383,7 +383,7 @@ export default class DisplayManager {
 
         // all projects
         const button = document.createElement("button");
-        button.textContent = "Unfiltered";
+        button.textContent = "Show All Tasks";
         button.dataset.id = "all";
         button.addEventListener("click", () => unfilteredCallback());
         const li = document.createElement("li");

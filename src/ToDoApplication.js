@@ -2,13 +2,13 @@ import Project from "./Project.js";
 
 export default class ToDoApplication {
     constructor() {
-        this.projectList = [new Project("Unclassified Tasks")];
+        this.projectList = [];
     }
 
-    addProject(name) {
-        const proj = new Project(name);
+    addProject(name, id) {
+        const proj = new Project(name, id);
         this.projectList.push(proj);
-        return proj.id;
+        return proj;
     }
 
     getProjectId(index) {
@@ -49,7 +49,7 @@ export default class ToDoApplication {
     addTaskToProject(projectId, taskName, description, dueDate, priority) {
         const findInd = this.#findProjectIndex(projectId);
         if (findInd >= 0) {
-            return this.projectList[findInd].addTask(taskName, description, dueDate, priority);
+            return this.projectList[findInd].addTask(taskName, description, dueDate, priority, null);
         }
     }
 

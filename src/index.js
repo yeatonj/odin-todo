@@ -4,6 +4,7 @@ import "./styles.css";
 // Import module -----------
 import ToDoApplication from "./ToDoApplication.js";
 import DisplayManager from "./DisplayManager.js";
+import StorageManager from "./StorageManager.js";
 
 // Add image -----------
 // import testImage from "./test.png";
@@ -14,7 +15,9 @@ class Controller {
     constructor() {
         this.app = new ToDoApplication();
         this.dispManager = new DisplayManager(this);
+        this.storageManager = new StorageManager();
         this.activeProject = null;
+        this.initializeProjects();
     }
 
     getActiveProjectName() {
@@ -22,6 +25,19 @@ class Controller {
             return null;
         } else {
             return this.app.getProjectName(this.activeProject);
+        }
+    }
+
+    initializeProjects() {
+        if (!this.storageManager.isActive()) {
+            return;
+        }
+        const projectIds = this.storageManager.recoverProjectIds();
+        for (const projId of projectIds) {
+            const proj = this.storageManager.recoverProjectFromId(projId);
+            if (proj != null) {
+                this.app.addProject(proj, projId);
+            }
         }
     }
 
@@ -49,7 +65,7 @@ class Controller {
     }
 
     addProjectCallback(projectName) {
-        this.app.addProject(projectName);
+        this.storageManager.persistProject(this.app.addProject(projectName, null));
         this.dispManager.redrawProjectSidebar(this.app.getProjectList(), 
             this.addProjectCallback.bind(this), 
             this.unfilteredProjectCallback.bind(this), 
@@ -78,7 +94,9 @@ class Controller {
     }
 
     addTaskCallback(taskName, description, project, dueDate, priority) {
-        this.app.addTaskToProject(project, taskName, description, dueDate, priority);
+        this.storageManager.persistTask(
+            this.app.getTaskFromIds(
+                this.app.addTaskToProject(project, taskName, description, dueDate, priority, null), project));
         // redraw task window for active task
         if (this.activeProject === null) {
             this.dispManager.redrawActiveTasks(this.app.getAllTasks(), 
@@ -139,14 +157,15 @@ class Controller {
 const controller = new Controller();
 
 // Add some projects and some tasks
-controller.app.addProject("Coding");
-controller.app.addProject("TOP");
+// controller.app.addProject("Unclassified Projects", null);
+// controller.app.addProject("Coding", null);
+// controller.app.addProject("TOP", null);
 
-controller.app.addTaskToProject(controller.app.getProjectId(0), "groceries", "get groceries", "1/2/25", 1);
-controller.app.addTaskToProject(controller.app.getProjectId(0), "get car", "pick it up", "1/2/29", 3);
+// controller.app.addTaskToProject(controller.app.getProjectId(0), "groceries", "get groceries", "1/2/25", 1);
+// controller.app.addTaskToProject(controller.app.getProjectId(0), "get car", "pick it up", "1/2/29", 3);
 
-controller.app.addTaskToProject(controller.app.getProjectId(1), "homework", "for coding", "1/2/23", 2);
+// controller.app.addTaskToProject(controller.app.getProjectId(1), "homework", "for coding", "1/2/23", 2);
 
-controller.app.addTaskToProject(controller.app.getProjectId(2), "todo app", "for top", "1/2/22", 1);
+// controller.app.addTaskToProject(controller.app.getProjectId(2), "todo app", "for top", "1/2/22", 1);
 
 controller.initialDraw();

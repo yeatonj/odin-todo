@@ -1,14 +1,19 @@
 import Task from "./Task.js";
 
 export default class Project {
-    constructor(projectName) {
+    constructor(projectName, id) {
         this.projectName = projectName;
         this.taskList = [];
-        this.id = crypto.randomUUID();
+        if (id === null) {
+            this.id = crypto.randomUUID();
+        } else {
+            this.id = id;
+        }
+        
     }
 
-    addTask(taskName, description, dueDate, priority) {
-        const task = new Task(taskName, description, dueDate, priority, false, this.id, this.projectName);
+    addTask(taskName, description, dueDate, priority, id) {
+        const task = new Task(taskName, description, dueDate, priority, false, this.id, this.projectName, id);
         this.taskList.push(task);
         return task.id;
     }
