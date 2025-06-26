@@ -36,9 +36,13 @@ class Controller {
         for (const projId of projectIds) {
             const proj = this.storageManager.recoverProjectFromId(projId);
             if (proj != null) {
-                this.app.addProject(proj.projectName, proj.id);
-                for (const projTask of proj.taskList) {
-                    this.app.addTaskToProject(projTask.projectId, projTask.taskName, projTask.description, projTask.dueDate, projTask.priority, projTask.id);
+                console.log(proj);
+                console.log(proj.projName);
+                console.log(proj.id);
+                this.app.addProject(proj.projName, proj.id);
+                for (const projTask of proj.tasks) {
+                    const toAdd = this.storageManager.recoverTaskFromId(projTask);
+                    this.app.addTaskToProject(toAdd.projectId, toAdd.taskName, toAdd.description, toAdd.dueDate, toAdd.priority, toAdd.id, toAdd.isComplete);
                 }
             }
         }
@@ -56,6 +60,8 @@ class Controller {
 
     submitEditTaskCallback(taskId, projectId, taskName, description, dueDate, priority, isComplete) {
         this.app.updateTask(projectId, taskId, taskName, description, dueDate, priority, isComplete);
+        console.log(this.app.getTaskFromIds(taskId, projectId));
+        this.storageManager.persistTask(this.app.getTaskFromIds(taskId, projectId));
         this.dispManager.collapseTask(taskId, 
             this.app.getTaskFromIds(taskId, projectId), 
             this.expandTaskCallback.bind(this));
@@ -99,7 +105,7 @@ class Controller {
     addTaskCallback(taskName, description, project, dueDate, priority) {
         this.storageManager.persistTask(
             this.app.getTaskFromIds(
-                this.app.addTaskToProject(project, taskName, description, dueDate, priority, null), project)
+                this.app.addTaskToProject(project, taskName, description, dueDate, priority, null, false), project)
             );
         this.storageManager.persistProject(this.app.getProjectFromId(project));
         // redraw task window for active task
@@ -153,6 +159,7 @@ class Controller {
 
     toggleCallback(taskId, projectId) {
         this.app.toggleTaskCompletion(projectId, taskId);
+        this.storageManager.persistTask(this.app.getTaskFromIds(taskId, projectId));
     }
 }
 

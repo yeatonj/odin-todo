@@ -12,8 +12,8 @@ export default class Project {
         
     }
 
-    addTask(taskName, description, dueDate, priority, id) {
-        const task = new Task(taskName, description, dueDate, priority, false, this.id, this.projectName, id);
+    addTask(taskName, description, dueDate, priority, id, isComplete) {
+        const task = new Task(taskName, description, dueDate, priority, isComplete, this.id, this.projectName, id);
         this.taskList.push(task);
         return task.id;
     }

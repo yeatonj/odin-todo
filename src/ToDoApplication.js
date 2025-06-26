@@ -46,10 +46,10 @@ export default class ToDoApplication {
         this.projectList.splice(findInd, 1);
     }
 
-    addTaskToProject(projectId, taskName, description, dueDate, priority, id) {
+    addTaskToProject(projectId, taskName, description, dueDate, priority, id, isComplete) {
         const findInd = this.#findProjectIndex(projectId);
         if (findInd >= 0) {
-            return this.projectList[findInd].addTask(taskName, description, dueDate, priority, id);
+            return this.projectList[findInd].addTask(taskName, description, dueDate, priority, id, isComplete);
         }
     }
 

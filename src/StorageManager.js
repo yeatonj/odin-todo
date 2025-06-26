@@ -27,22 +27,40 @@ export default class StorageManager {
         }
         this.projectIds[project.id] = project.id;
         localStorage.setItem('projectIds', JSON.stringify(this.projectIds));
-        localStorage.setItem(project.id, JSON.stringify(project));
+        const taskIds = [];
+        for (const task of project.taskList) {
+            taskIds.push(task.id);
+        }
+        const jsonProj = {};
+        jsonProj["tasks"] = taskIds;
+        jsonProj["projName"] = project.projectName;
+        jsonProj["id"] = project.id;
+        localStorage.setItem(project.id, JSON.stringify(jsonProj));
     }
 
     persistTask(task) {
         if (!this.storageActive) {
             return;
         }
+        console.log(task);
         localStorage.setItem(task.id, JSON.stringify(task));
     }
 
     deleteProject(project) {
-
+        if (!this.storageActive) {
+            return;
+        }
+        delete this.projectIds[project.id];
+        for (const task of project.tasklist) {
+            this.deleteTask(task);
+        }
     }
 
     deleteTask(task) {
-
+        if (!this.storageActive) {
+            return;
+        }
+        localStorage.removeItem(task.id);
     }
 
     recoverProjectIds() {
