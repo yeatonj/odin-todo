@@ -36,7 +36,10 @@ class Controller {
         for (const projId of projectIds) {
             const proj = this.storageManager.recoverProjectFromId(projId);
             if (proj != null) {
-                this.app.addProject(proj, projId);
+                this.app.addProject(proj.projectName, proj.id);
+                for (const projTask of proj.taskList) {
+                    this.app.addTaskToProject(projTask.projectId, projTask.taskName, projTask.description, projTask.dueDate, projTask.priority, projTask.id);
+                }
             }
         }
     }
@@ -96,7 +99,9 @@ class Controller {
     addTaskCallback(taskName, description, project, dueDate, priority) {
         this.storageManager.persistTask(
             this.app.getTaskFromIds(
-                this.app.addTaskToProject(project, taskName, description, dueDate, priority, null), project));
+                this.app.addTaskToProject(project, taskName, description, dueDate, priority, null), project)
+            );
+        this.storageManager.persistProject(this.app.getProjectFromId(project));
         // redraw task window for active task
         if (this.activeProject === null) {
             this.dispManager.redrawActiveTasks(this.app.getAllTasks(), 

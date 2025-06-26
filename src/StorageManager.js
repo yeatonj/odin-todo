@@ -27,7 +27,7 @@ export default class StorageManager {
         }
         this.projectIds[project.id] = project.id;
         localStorage.setItem('projectIds', JSON.stringify(this.projectIds));
-        localStorage.setItem(project.id, project.projectName);
+        localStorage.setItem(project.id, JSON.stringify(project));
     }
 
     persistTask(task) {
@@ -60,11 +60,14 @@ export default class StorageManager {
         if (!localStorage.getItem(id)) {
             return null;
         }
-        return localStorage.getItem(id);
+        return JSON.parse(localStorage.getItem(id));
     }
 
     recoverTaskFromId(id) {
-
+        if (!localStorage.getItem(id)) {
+            return null;
+        }
+        return JSON.parse(localStorage.getItem(id));
     }
 
 

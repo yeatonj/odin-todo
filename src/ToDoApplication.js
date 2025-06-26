@@ -46,10 +46,10 @@ export default class ToDoApplication {
         this.projectList.splice(findInd, 1);
     }
 
-    addTaskToProject(projectId, taskName, description, dueDate, priority) {
+    addTaskToProject(projectId, taskName, description, dueDate, priority, id) {
         const findInd = this.#findProjectIndex(projectId);
         if (findInd >= 0) {
-            return this.projectList[findInd].addTask(taskName, description, dueDate, priority, null);
+            return this.projectList[findInd].addTask(taskName, description, dueDate, priority, id);
         }
     }
 
@@ -101,6 +101,10 @@ export default class ToDoApplication {
             projects.push([project.projectName, project.id]);
         }
         return projects;
+    }
+
+    getProjectFromId(id) {
+        return this.projectList[this.#findProjectIndex(id)];
     }
 
     getTaskFromIds(taskId, projectId) {
