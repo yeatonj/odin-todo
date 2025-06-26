@@ -17,9 +17,18 @@ class Controller {
     }
 
     expandCallback(taskId, projectId) {
-        console.log(this.app);
         // Get the task info from the app and pass back to the display manager
-        this.dispManager.expandTask(taskId, this.app.getTaskFromIds(taskId, projectId));
+        this.dispManager.expandTask(taskId, this.app.getTaskFromIds(taskId, projectId), this.submitCallback.bind(this), this.cancelCallback.bind(this));
+    }
+
+    submitCallback(taskId, projectId, taskName, description, dueDate, priority, isComplete) {
+        console.log("attempting to submit");
+        this.app.updateTask(projectId, taskId, taskName, description, dueDate, priority, isComplete);
+        this.dispManager.collapseTask(taskId, this.app.getTaskFromIds(taskId, projectId), this.expandCallback.bind(this));
+    }
+
+    cancelCallback(taskId, projectId) {
+        this.dispManager.collapseTask(taskId, this.app.getTaskFromIds(taskId, projectId), this.expandCallback.bind(this));
     }
 }
 
@@ -43,4 +52,4 @@ controller.app.addTaskToProject(controller.app.getProjectId(2), "todo app", "for
 controller.dispManager.redrawProjectSidebar(controller.app.getProjectList());
 
 // Draw tasks
-controller.dispManager.redrawActiveTasks(controller.app.getAllTasks(), controller.expandCallback);
+controller.dispManager.redrawActiveTasks(controller.app.getAllTasks(), controller.expandCallback.bind(controller));

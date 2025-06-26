@@ -42,7 +42,7 @@ export default class Project {
     updateProjectTask(taskId, taskName, description, dueDate, priority, isComplete) {
         const findInd = this.#findTaskIndex(taskId);
         if (findInd >= 0) {
-            this.taskList[findInd].updateProjectTask(taskName, description, dueDate, priority, isComplete);
+            this.taskList[findInd].updateTask(taskName, description, dueDate, priority, isComplete);
         }
     }
 

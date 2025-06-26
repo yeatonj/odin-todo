@@ -59,6 +59,8 @@ export default class ToDoApplication {
 
     updateTask(projectId, taskId, taskName, description, dueDate, priority, isComplete) {
         const findInd = this.#findProjectIndex(projectId);
+        // console.log(this.projectList[findInd].updateProjectTask);
+        console.log(this);
         if (findInd >= 0) {
             this.projectList[findInd].updateProjectTask(taskId, taskName, description, dueDate, priority, isComplete);
         }
@@ -69,7 +71,7 @@ export default class ToDoApplication {
     getAllTasks() {
         var finalArr = [];
         for (const project of this.projectList) {
-            finalArr.push([project.taskList, project.id]);
+            finalArr = finalArr.concat(project.taskList);
         }
         return finalArr;
     }

@@ -22,43 +22,48 @@ export default class DisplayManager {
         while (taskContainer.firstChild) {
             taskContainer.removeChild(taskContainer.lastChild);
         }
-        for (const project of taskList) {
-            console.log(project);
-            for (const task of project[0]) {
-                const taskCard = document.createElement("div");
-                taskCard.classList.add("task-card");
-                taskCard.classList.add("collapsed");
-                taskCard.dataset.id = task.id;
-    
-                const taskName = document.createElement("p");
-                taskName.textContent = task.taskName;
-                const dueDate = document.createElement("p");
-                dueDate.textContent = task.dueDate;
-                const priority = document.createElement("div");
-                priority.textContent = task.priority;
-                const completeButton = document.createElement("button");
-                const expandButton = document.createElement("button");
-                expandButton.textContent = "+";
-                expandButton.addEventListener("click", () => {
-                    this.controller.expandCallback(task.id, project[1]);
-                })
-    
-                taskCard.appendChild(taskName);
-                taskCard.appendChild(dueDate);
-                taskCard.appendChild(priority);
-                taskCard.appendChild(completeButton);
-                taskCard.appendChild(expandButton);
-    
-    
-                taskContainer.appendChild(taskCard);
-            }
+
+        for (const task of taskList) {
+            const taskCard = document.createElement("div");
+            taskCard.classList.add("task-card");
+            taskCard.classList.add("collapsed");
+            taskCard.dataset.id = task.id;
+
+            this.#drawCollapsedTask(task, taskCard, expandCallback);
+            taskContainer.appendChild(taskCard);
         }
-        
 
         const addButton = document.createElement("button");
         addButton.textContent = "Add Task";
         taskContainer.appendChild(addButton);
 
+    }
+
+    #drawCollapsedTask(task, taskCard, expandCallback) {
+        const taskName = document.createElement("p");
+        taskName.textContent = task.taskName;
+        const dueDate = document.createElement("p");
+        dueDate.textContent = task.dueDate;
+        const priority = document.createElement("div");
+        priority.textContent = task.priority;
+        const completeButton = document.createElement("button");
+        if (task.isComplete) {
+            completeButton.classList.add("complete");
+        }
+        else {
+            completeButton.classList.add("incomplete");
+        }
+        const expandButton = document.createElement("button");
+        expandButton.textContent = "+";
+        expandButton.addEventListener("click", () => {
+            expandCallback(task.id, task.projectId);
+        })
+
+        taskCard.appendChild(taskName);
+        taskCard.appendChild(dueDate);
+        taskCard.appendChild(priority);
+        taskCard.appendChild(completeButton);
+        taskCard.appendChild(expandButton);
     }
 
     redrawSingleTask(taskId, task) {
@@ -67,23 +72,132 @@ export default class DisplayManager {
         console.log(task);
     }
 
-    expandTask(taskId, task) {
+    expandTask(taskId, task, submitCallback, cancelCallback) {
         // Called when we want to view the details of or edit a task
-        const taskContainer = document.querySelector('[data-id="' + taskId +'"]');
-        const newEl = document.createElement("p");
-        newEl.textContent = "what's up";
+        // select card and change to expanded
+        const taskCard = document.querySelector('[data-id="' + taskId +'"]');
+        taskCard.classList.remove("collapsed")
+        taskCard.classList.add("expanded");
 
-        taskContainer.appendChild(newEl);
+        while (taskCard.firstChild) {
+            taskCard.removeChild(taskCard.lastChild);
+        }
+        const inputForm = document.createElement("form");
 
-        console.log(taskId);
-        console.log(task);
+        // Task Name
+        const nameLabel = document.createElement("label");
+        nameLabel.htmlFor = "name";
+        nameLabel.textContent = "Task Name:";
+        const nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.name = "name";
+        nameInput.id = "name";
+        nameInput.required = true;
+        nameInput.value = task.taskName;
+        inputForm.appendChild(nameLabel);
+        inputForm.appendChild(nameInput);
+
+        // Due Date
+        const dateLabel = document.createElement("label");
+        dateLabel.htmlFor = "due-date";
+        dateLabel.textContent = "Due Date:";
+        const dateInput = document.createElement("input");
+        dateInput.type = "date";
+        dateInput.name = "due-date";
+        dateInput.id = "due-date";
+        dateInput.value = task.dueDate;
+        inputForm.appendChild(dateLabel);
+        inputForm.appendChild(dateInput);
+
+        // Description
+        const descrLabel = document.createElement("label");
+        descrLabel.htmlFor = "descr";
+        descrLabel.textContent = "Description:";
+        const descrInput = document.createElement("textarea");
+        descrInput.name = "descr";
+        descrInput.id = "descr";
+        descrInput.rows = 5;
+        descrInput.cols = 40;
+        descrInput.value = task.description;
+        inputForm.appendChild(descrLabel);
+        inputForm.appendChild(descrInput);
+
+        // Priority
+        const priorLabel = document.createElement("label");
+        priorLabel.htmlFor = "priority";
+        priorLabel.textContent = "Priority:";
+        const priorInput = document.createElement("select");
+        priorInput.name = "priority";
+        priorInput.id = "priority";
+        for (var i = 1; i < 4; i++) {
+            const prior = document.createElement("option");
+            prior.value = i;
+            prior.textContent = String(i);
+            if (task.priority === i) {
+                prior.selected = true;
+            }
+            priorInput.appendChild(prior);
+        }
+        // priorInput.value = task.priority;
+        inputForm.appendChild(priorLabel);
+        inputForm.appendChild(priorInput);
+
+        // Is Complete
+        const completeLabel = document.createElement("label");
+        completeLabel.htmlFor = "complete";
+        completeLabel.textContent = "Complete?";
+        const completeInput = document.createElement("input");
+        completeInput.type = "checkbox";
+        completeInput.name = "complete";
+        completeInput.id = "complete";
+        if (task.isComplete) {
+            completeInput.checked = true;
+        }
+        inputForm.appendChild(completeLabel);
+        inputForm.appendChild(completeInput);
         
+
+        const submit = document.createElement("button");
+        submit.textContent = "Update Task";
+        submit.type = "submit";
+        submit.addEventListener("click", (event) => {
+            event.preventDefault();
+            submitCallback(
+                task.id, 
+                task.projectId, 
+                nameInput.value, 
+                descrInput.value, 
+                dateInput.value, 
+                priorInput.value, 
+                completeInput.checked);
+        })
+
+        const cancel = document.createElement("button");
+        cancel.classList.add("cancel");
+        cancel.textContent = "Cancel Changes";
+        cancel.addEventListener("click", (event) => {
+            event.preventDefault();
+            cancelCallback(task.id, task.projectId);
+        })
+
+        inputForm.appendChild(submit);
+        inputForm.appendChild(cancel);
+
+
+        taskCard.appendChild(inputForm);
     }
 
-    collapseTask(taskId, projectId) {
+    collapseTask(taskId, task, expandCallback) {
         // Called when we are done editing the details of a task
-        console.log(taskId);
-        console.log(task);
+        // select card and change to expanded
+        const taskCard = document.querySelector('[data-id="' + taskId +'"]');
+        taskCard.classList.remove("expanded")
+        taskCard.classList.add("collapsed");
+
+        while (taskCard.firstChild) {
+            taskCard.removeChild(taskCard.lastChild);
+        }
+        this.#drawCollapsedTask(task, taskCard, expandCallback);
     }
 
     appendTask(taskId, projectId, task) {

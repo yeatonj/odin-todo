@@ -46,9 +46,18 @@ footer {
 .task-card {
     display: flex;
     justify-content: space-evenly;
+    border: 1px solid black;
 }
 
 #task-card button {
     height: 10px;
     width: 10px;
+}
+
+.complete {
+    background-color: red;
+}
+
+.incomplete {
+    background-color: green;
 }
