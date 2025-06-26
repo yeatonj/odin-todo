@@ -97,6 +97,21 @@ export default class DisplayManager {
         inputForm.appendChild(nameLabel);
         inputForm.appendChild(nameInput);
 
+        // Project
+        const projectLabel = document.createElement("label");
+        projectLabel.htmlFor = "project";
+        projectLabel.textContent = "Project:";
+        const projectInput = document.createElement("input");
+        projectInput.classList.add("read-only");
+        projectInput.type = "text";
+        projectInput.readOnly = true;
+        projectInput.name = "project";
+        projectInput.id = "project";
+        projectInput.value = task.projectName;
+        inputForm.appendChild(projectLabel);
+        inputForm.appendChild(projectInput);
+
+
         // Due Date
         const dateLabel = document.createElement("label");
         dateLabel.htmlFor = "due-date";

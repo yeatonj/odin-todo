@@ -61,3 +61,7 @@ footer {
 .incomplete {
     background-color: green;
 }
+
+.read-only {
+    background-color: grey;
+}

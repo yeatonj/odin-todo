@@ -1,5 +1,5 @@
 export default class Task {
-    constructor(taskName, description, dueDate, priority, isComplete, projectId) {
+    constructor(taskName, description, dueDate, priority, isComplete, projectId, projectName) {
         this.taskName = taskName;           // string
         this.description = description;     // string 
         this.dueDate = dueDate;             // Date()
@@ -7,6 +7,7 @@ export default class Task {
         this.isComplete = isComplete;       // boolean
         this.id = crypto.randomUUID();
         this.projectId = projectId;
+        this.projectName = projectName;
     }
 
     toggleComplete() {
