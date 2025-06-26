@@ -185,7 +185,7 @@ export default class DisplayManager {
                 dateInput.value, 
                 priorInput.value, 
                 completeInput.checked);
-        })
+        });
 
         const cancel = document.createElement("button");
         cancel.classList.add("cancel");
@@ -229,7 +229,7 @@ export default class DisplayManager {
 
     }
 
-    redrawProjectSidebar(projects) {
+    redrawProjectSidebar(projects, addCallback) {
         // Called to redraw the project sidebar
         const sidebar = document.querySelector("#sidebar");
 
@@ -260,5 +260,29 @@ export default class DisplayManager {
             projList.appendChild(li)
         }
         sidebar.appendChild(projList);
+
+        // For new projects
+        const newProj = document.createElement("form");
+        const input = document.createElement("input");
+        const label = document.createElement("label");
+        label.htmlFor = "new";
+        label.textContent = "New Project Name: ";
+        label.style.display = "none";
+        input.name = "new";
+        input.id = "new";
+        input.style = "text";
+        newProj.appendChild(label);
+        newProj.appendChild(input);
+        const add = document.createElement("button");
+        add.type = "submit";
+        add.textContent = "Add Project";
+        add.addEventListener("click", (event) => {
+            event.preventDefault();
+            addCallback(input.value);
+        })
+
+
+        newProj.appendChild(add);
+        sidebar.appendChild(newProj);
     }
 }
