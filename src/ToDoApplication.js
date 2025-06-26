@@ -37,12 +37,13 @@ export default class ToDoApplication {
     }
 
     removeProject(id) {
+        console.log(id);
         // index at one to prevent removing default project
         const findInd = this.#findProjectIndex(id);
-        if (findInd < 1) {
+        if (findInd < 0) {
             return;
         }
-        this.projectList.splice(i, 1);
+        this.projectList.splice(findInd, 1);
     }
 
     addTaskToProject(projectId, taskName, description, dueDate, priority) {

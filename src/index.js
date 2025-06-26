@@ -41,7 +41,7 @@ class Controller {
 
     addProjectCallback(projectName) {
         this.app.addProject(projectName);
-        this.dispManager.redrawProjectSidebar(this.app.getProjectList(), this.addProjectCallback.bind(this), this.unfilteredProjectCallback.bind(this), this.filteredProjectCallback.bind(this));
+        this.dispManager.redrawProjectSidebar(this.app.getProjectList(), this.addProjectCallback.bind(this), this.unfilteredProjectCallback.bind(this), this.filteredProjectCallback.bind(this), this.deleteProjectCallback.bind(this));
     }
 
     unfilteredProjectCallback() {
@@ -62,7 +62,19 @@ class Controller {
         } else {
             this.dispManager.redrawActiveTasks(this.app.getProjectTasks(this.activeProject), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app), this.getActiveProjectName());
         }
+    }
 
+    deleteProjectCallback(projectId) {
+        this.app.removeProject(projectId);
+        this.dispManager.redrawProjectSidebar(this.app.getProjectList(), this.addProjectCallback.bind(this), this.unfilteredProjectCallback.bind(this), this.filteredProjectCallback.bind(this), this.deleteProjectCallback.bind(this));
+        if (this.activeProject === projectId || this.activeProject === null) {
+            this.dispManager.redrawActiveTasks(this.app.getAllTasks(), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app), this.getActiveProjectName());
+        }
+    }
+
+    initialDraw() {
+        this.dispManager.redrawProjectSidebar(this.app.getProjectList(), this.addProjectCallback.bind(this), this.unfilteredProjectCallback.bind(this), this.filteredProjectCallback.bind(this), this.deleteProjectCallback.bind(this));
+        this.dispManager.redrawActiveTasks(this.app.getAllTasks(), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app), this.getActiveProjectName());
     }
 }
 
@@ -82,8 +94,4 @@ controller.app.addTaskToProject(controller.app.getProjectId(1), "homework", "for
 
 controller.app.addTaskToProject(controller.app.getProjectId(2), "todo app", "for top", "1/2/22", 1);
 
-// Draw project list    
-controller.dispManager.redrawProjectSidebar(controller.app.getProjectList(), controller.addProjectCallback.bind(controller), controller.unfilteredProjectCallback.bind(controller), controller.filteredProjectCallback.bind(controller));
-
-// Draw tasks
-controller.dispManager.redrawActiveTasks(controller.app.getAllTasks(), controller.expandTaskCallback.bind(controller), controller.addTaskCallback.bind(controller), controller.app.getProjectList.bind(controller.app), controller.getActiveProjectName());
+controller.initialDraw();

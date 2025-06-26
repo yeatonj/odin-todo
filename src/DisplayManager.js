@@ -356,7 +356,7 @@ export default class DisplayManager {
 
     }
 
-    redrawProjectSidebar(projects, addCallback, unfilteredCallback, filteredCallback) {
+    redrawProjectSidebar(projects, addCallback, unfilteredCallback, filteredCallback, deleteCallback) {
         // Called to redraw the project sidebar
         const sidebar = document.querySelector("#sidebar");
 
@@ -390,6 +390,10 @@ export default class DisplayManager {
         }
         sidebar.appendChild(projList);
 
+        const addHeader = document.createElement("h4");
+        addHeader.textContent = "Add Project";
+        sidebar.appendChild(addHeader);
+
         // For new projects
         const newProj = document.createElement("form");
         const input = document.createElement("input");
@@ -408,10 +412,41 @@ export default class DisplayManager {
         add.addEventListener("click", (event) => {
             event.preventDefault();
             addCallback(input.value);
-        })
-
+        });
 
         newProj.appendChild(add);
         sidebar.appendChild(newProj);
+
+        const deleteHeader = document.createElement("h4");
+        deleteHeader.textContent = "Delete Project";
+        sidebar.appendChild(deleteHeader);
+
+        // To delete projects
+        // For new projects
+        const delForm = document.createElement("form");
+        const deletor = document.createElement("select");
+        const delLabel = document.createElement("label");
+        delLabel.htmlFor = "new";
+        delLabel.textContent = "Delete Project: ";
+        deletor.name = "del";
+        deletor.id = "del";
+        for (const project of projects) {
+            const proj = document.createElement("option");
+            proj.value = project[1];
+            proj.textContent = project[0];
+            deletor.appendChild(proj);
+        }
+        delForm.append(deletor);
+
+
+        const delButton = document.createElement("button");
+        delButton.type = "submit";
+        delButton.textContent = "Delete";
+        delButton.addEventListener("click", (event) => {
+            event.preventDefault();
+            deleteCallback(deletor.value);
+        });
+        delForm.appendChild(delButton);
+        sidebar.appendChild(delForm);
     }
 }
