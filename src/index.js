@@ -109,6 +109,17 @@ class Controller {
     }
 
     addTaskCallback(taskName, description, project, dueDate, priority) {
+        if (project === "") {
+            // Need to create a new project for this... all projects must be categorized!
+            const newProject = this.app.addProject("Uncategorized Tasks", null);
+            project = newProject.id;
+            this.storageManager.persistProject(newProject);
+            this.dispManager.redrawProjectSidebar(this.app.getProjectList(), 
+                this.addProjectCallback.bind(this), 
+                this.unfilteredProjectCallback.bind(this), 
+                this.filteredProjectCallback.bind(this), 
+                this.deleteProjectCallback.bind(this));
+        }
         this.storageManager.persistTask(
             this.app.getTaskFromIds(
                 this.app.addTaskToProject(project, taskName, description, dueDate, priority, null, false), project)
