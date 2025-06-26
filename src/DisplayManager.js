@@ -74,7 +74,7 @@ export default class DisplayManager {
         taskCard.appendChild(expandButton);
     }
 
-    expandTask(taskId, task, submitCallback, cancelCallback) {
+    expandTask(taskId, task, submitCallback, cancelCallback, deleteCallback) {
         // Called when we want to view the details of or edit a task
         // select card and change to expanded
         const taskCard = document.querySelector('[data-id="' + taskId +'"]');
@@ -197,8 +197,18 @@ export default class DisplayManager {
             cancelCallback(task.id, task.projectId);
         });
 
+        const del = document.createElement("button");
+        del.classList.add("del");
+        del.textContent = "Delete Task";
+        del.addEventListener("click", (event) => {
+            event.preventDefault();
+            deleteCallback(task.projectId, task.id);
+            document.querySelector('[data-id="' + task.id +'"]').remove();
+        });
+
         inputForm.appendChild(submit);
         inputForm.appendChild(cancel);
+        inputForm.appendChild(del);
 
 
         taskCard.appendChild(inputForm);

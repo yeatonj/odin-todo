@@ -27,7 +27,7 @@ class Controller {
 
     expandTaskCallback(taskId, projectId) {
         // Get the task info from the app and pass back to the display manager
-        this.dispManager.expandTask(taskId, this.app.getTaskFromIds(taskId, projectId), this.submitEditTaskCallback.bind(this), this.cancelEditTaskCallback.bind(this));
+        this.dispManager.expandTask(taskId, this.app.getTaskFromIds(taskId, projectId), this.submitEditTaskCallback.bind(this), this.cancelEditTaskCallback.bind(this), this.app.removeTask.bind(this.app));
     }
 
     submitEditTaskCallback(taskId, projectId, taskName, description, dueDate, priority, isComplete) {
