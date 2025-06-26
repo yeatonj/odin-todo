@@ -50,8 +50,12 @@ export default class StorageManager {
         if (!this.storageActive) {
             return;
         }
+        console.log(project);
+        console.log(project.id)
         delete this.projectIds[project.id];
-        for (const task of project.tasklist) {
+        localStorage.setItem('projectIds', JSON.stringify(this.projectIds));
+        localStorage.removeItem(project.id);
+        for (const task of project.taskList) {
             this.deleteTask(task);
         }
     }

@@ -55,7 +55,13 @@ class Controller {
                 projectId), 
                 this.submitEditTaskCallback.bind(this), 
                 this.cancelEditTaskCallback.bind(this), 
-                this.app.removeTask.bind(this.app));
+                this.removeTaskCallback.bind(this));
+    }
+
+    removeTaskCallback(taskId, projectId) {
+        this.storageManager.deleteTask(this.app.getTaskFromIds(taskId, projectId));
+        this.app.removeTask(projectId, taskId);
+        this.storageManager.persistProject(this.app.getProjectFromId(projectId));
     }
 
     submitEditTaskCallback(taskId, projectId, taskName, description, dueDate, priority, isComplete) {
@@ -127,6 +133,7 @@ class Controller {
     }
 
     deleteProjectCallback(projectId) {
+        this.storageManager.deleteProject(this.app.getProjectFromId(projectId));
         this.app.removeProject(projectId);
         this.dispManager.redrawProjectSidebar(this.app.getProjectList(), 
             this.addProjectCallback.bind(this), 

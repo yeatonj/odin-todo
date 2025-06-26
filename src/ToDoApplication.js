@@ -108,6 +108,8 @@ export default class ToDoApplication {
     }
 
     getTaskFromIds(taskId, projectId) {
+        console.log(taskId)
+        console.log(projectId);
         const projInd = this.#findProjectIndex(projectId);
         if (projInd > -1) {
             return this.projectList[projInd].getTaskFromId(taskId);

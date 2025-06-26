@@ -213,7 +213,7 @@ export default class DisplayManager {
         del.textContent = "Delete Task";
         del.addEventListener("click", (event) => {
             event.preventDefault();
-            deleteCallback(task.projectId, task.id);
+            deleteCallback(task.id, task.projectId);
             document.querySelector('[data-id="' + task.id +'"]').remove();
         });
 
