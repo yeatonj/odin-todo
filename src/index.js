@@ -32,7 +32,15 @@ class Controller {
 
     addProjectCallback(projectName) {
         this.app.addProject(projectName);
-        controller.dispManager.redrawProjectSidebar(controller.app.getProjectList(), this.addProjectCallback.bind(this));
+        this.dispManager.redrawProjectSidebar(this.app.getProjectList(), this.addProjectCallback.bind(this), this.unfilteredProjectCallback.bind(this), this.filteredProjectCallback.bind(this));
+    }
+
+    unfilteredProjectCallback() {
+        this.dispManager.redrawActiveTasks(this.app.getAllTasks(), this.expandTaskCallback.bind(this));
+    }
+
+    filteredProjectCallback(projectId) {
+        this.dispManager.redrawActiveTasks(this.app.getProjectTasks(projectId), this.expandTaskCallback.bind(this));
     }
 }
 
@@ -53,7 +61,7 @@ controller.app.addTaskToProject(controller.app.getProjectId(1), "homework", "for
 controller.app.addTaskToProject(controller.app.getProjectId(2), "todo app", "for top", "1/2/22", 1);
 
 // Draw project list    
-controller.dispManager.redrawProjectSidebar(controller.app.getProjectList(), controller.addProjectCallback.bind(controller));
+controller.dispManager.redrawProjectSidebar(controller.app.getProjectList(), controller.addProjectCallback.bind(controller), controller.unfilteredProjectCallback.bind(controller), controller.filteredProjectCallback.bind(controller));
 
 // Draw tasks
 controller.dispManager.redrawActiveTasks(controller.app.getAllTasks(), controller.expandTaskCallback.bind(controller));

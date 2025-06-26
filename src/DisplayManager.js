@@ -229,7 +229,7 @@ export default class DisplayManager {
 
     }
 
-    redrawProjectSidebar(projects, addCallback) {
+    redrawProjectSidebar(projects, addCallback, unfilteredCallback, filteredCallback) {
         // Called to redraw the project sidebar
         const sidebar = document.querySelector("#sidebar");
 
@@ -247,6 +247,7 @@ export default class DisplayManager {
         const button = document.createElement("button");
         button.textContent = "Unfiltered";
         button.dataset.id = "all";
+        button.addEventListener("click", () => unfilteredCallback());
         const li = document.createElement("li");
         li.appendChild(button);
         projList.appendChild(li)
@@ -255,6 +256,7 @@ export default class DisplayManager {
             const button = document.createElement("button");
             button.textContent = project[0];
             button.dataset.id = project[1];
+            button.addEventListener("click", () => filteredCallback(project[1]));
             const li = document.createElement("li");
             li.appendChild(button);
             projList.appendChild(li)
