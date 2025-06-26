@@ -17,6 +17,14 @@ class Controller {
         this.activeProject = null;
     }
 
+    getActiveProjectName() {
+        if (this.activeProject === null) {
+            return null;
+        } else {
+            return this.app.getProjectName(this.activeProject);
+        }
+    }
+
     expandTaskCallback(taskId, projectId) {
         // Get the task info from the app and pass back to the display manager
         this.dispManager.expandTask(taskId, this.app.getTaskFromIds(taskId, projectId), this.submitEditTaskCallback.bind(this), this.cancelEditTaskCallback.bind(this));
@@ -38,21 +46,21 @@ class Controller {
 
     unfilteredProjectCallback() {
         this.activeProject = null;
-        this.dispManager.redrawActiveTasks(this.app.getAllTasks(), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app));
+        this.dispManager.redrawActiveTasks(this.app.getAllTasks(), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app), this.getActiveProjectName());
     }
 
     filteredProjectCallback(projectId) {
         this.activeProject = projectId;
-        this.dispManager.redrawActiveTasks(this.app.getProjectTasks(projectId), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app));
+        this.dispManager.redrawActiveTasks(this.app.getProjectTasks(projectId), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app), this.getActiveProjectName());
     }
 
     addTaskCallback(taskName, description, project, dueDate, priority) {
         this.app.addTaskToProject(project, taskName, description, dueDate, priority);
         // redraw task window for active task
         if (this.activeProject === null) {
-            this.dispManager.redrawActiveTasks(this.app.getAllTasks(), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app));
+            this.dispManager.redrawActiveTasks(this.app.getAllTasks(), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app), this.getActiveProjectName());
         } else {
-            this.dispManager.redrawActiveTasks(this.app.getProjectTasks(this.activeProject), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app));
+            this.dispManager.redrawActiveTasks(this.app.getProjectTasks(this.activeProject), this.expandTaskCallback.bind(this), this.addTaskCallback.bind(this), this.app.getProjectList.bind(this.app), this.getActiveProjectName());
         }
 
     }
@@ -78,4 +86,4 @@ controller.app.addTaskToProject(controller.app.getProjectId(2), "todo app", "for
 controller.dispManager.redrawProjectSidebar(controller.app.getProjectList(), controller.addProjectCallback.bind(controller), controller.unfilteredProjectCallback.bind(controller), controller.filteredProjectCallback.bind(controller));
 
 // Draw tasks
-controller.dispManager.redrawActiveTasks(controller.app.getAllTasks(), controller.expandTaskCallback.bind(controller), controller.addTaskCallback.bind(controller), controller.app.getProjectList.bind(controller.app));
+controller.dispManager.redrawActiveTasks(controller.app.getAllTasks(), controller.expandTaskCallback.bind(controller), controller.addTaskCallback.bind(controller), controller.app.getProjectList.bind(controller.app), controller.getActiveProjectName());

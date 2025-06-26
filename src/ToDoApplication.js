@@ -18,6 +18,15 @@ export default class ToDoApplication {
         return null;
     }
 
+    getProjectName(id) {
+        const ind = this.#findProjectIndex(id);
+        if (ind === -1) {
+            return null;
+        } else {
+            return this.projectList[ind].projectName;
+        }
+    }
+
     #findProjectIndex(id) {
         for (var i = 0; i < this.projectList.length; i++) {
             if (this.projectList[i].id === id) {

@@ -4,7 +4,7 @@ export default class DisplayManager {
         this.controller = controller;
     }
 
-    redrawActiveTasks(taskList, expandCallback, addTaskCallback, projectCallback) {
+    redrawActiveTasks(taskList, expandCallback, addTaskCallback, projectCallback, projectName) {
         // Called when we apply a filter of some sort to redraw the main task window
         // tasklist should simply be an array of tasks
 
@@ -13,7 +13,12 @@ export default class DisplayManager {
             header.removeChild(header.lastChild);
         }
         const headerText = document.createElement("h2");
-        headerText.textContent = "Tasks in project XXXXXX";
+        if (projectName === null) {
+            headerText.textContent = "Displaying All Tasks";
+        } else {
+            headerText.textContent = "Displaying Tasks in Project: " + projectName;
+        }
+        
         header.appendChild(headerText);
 
         // Now task list
@@ -57,7 +62,7 @@ export default class DisplayManager {
             completeButton.classList.add("incomplete");
         }
         const expandButton = document.createElement("button");
-        expandButton.textContent = "+";
+        expandButton.textContent = "Expand";
         expandButton.addEventListener("click", () => {
             expandCallback(task.id, task.projectId);
         })
