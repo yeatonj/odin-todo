@@ -70,13 +70,15 @@ class Controller {
         this.storageManager.persistTask(this.app.getTaskFromIds(taskId, projectId));
         this.dispManager.collapseTask(taskId, 
             this.app.getTaskFromIds(taskId, projectId), 
-            this.expandTaskCallback.bind(this));
+            this.expandTaskCallback.bind(this),
+        this.toggleCallback.bind(this));
     }
 
     cancelEditTaskCallback(taskId, projectId) {
         this.dispManager.collapseTask(taskId, 
             this.app.getTaskFromIds(taskId, projectId), 
-            this.expandTaskCallback.bind(this));
+            this.expandTaskCallback.bind(this),
+        this.toggleCallback.bind(this));
     }
 
     addProjectCallback(projectName) {

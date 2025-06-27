@@ -225,7 +225,7 @@ export default class DisplayManager {
         taskCard.appendChild(inputForm);
     }
 
-    collapseTask(taskId, task, expandCallback) {
+    collapseTask(taskId, task, expandCallback, toggleCallback) {
         // Called when we are done editing the details of a task
         // select card and change to expanded
         const taskCard = document.querySelector('[data-id="' + taskId +'"]');
@@ -235,7 +235,7 @@ export default class DisplayManager {
         while (taskCard.firstChild) {
             taskCard.removeChild(taskCard.lastChild);
         }
-        this.#drawCollapsedTask(task, taskCard, expandCallback);
+        this.#drawCollapsedTask(task, taskCard, expandCallback, toggleCallback);
     }
 
     appendTask(taskId, projectId, task) {
