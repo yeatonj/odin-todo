@@ -12,7 +12,7 @@ export default class DisplayManager {
         while (header.firstChild) {
             header.removeChild(header.lastChild);
         }
-        const headerText = document.createElement("h2");
+        const headerText = document.createElement("h3");
         if (projectName === null) {
             headerText.textContent = "Displaying All Tasks";
         } else {
@@ -53,7 +53,7 @@ export default class DisplayManager {
         const dueDate = document.createElement("p");
         dueDate.textContent = task.dueDate;
         const priority = document.createElement("div");
-        priority.textContent = task.priority;
+        priority.textContent = "Priority: " + task.priority;
         const completeButton = document.createElement("button");
         completeButton.classList.add("completion-toggle");
         if (task.isComplete) {
@@ -384,6 +384,7 @@ export default class DisplayManager {
         // all projects
         const button = document.createElement("button");
         button.textContent = "Show All Tasks";
+        button.id = "filter"
         button.dataset.id = "all";
         button.addEventListener("click", () => unfilteredCallback());
         const li = document.createElement("li");
@@ -392,6 +393,7 @@ export default class DisplayManager {
 
         for (const project of projects) {
             const button = document.createElement("button");
+            button.id = "filter";
             button.textContent = project[0];
             button.dataset.id = project[1];
             button.addEventListener("click", () => filteredCallback(project[1]));
@@ -419,7 +421,7 @@ export default class DisplayManager {
         newProj.appendChild(input);
         const add = document.createElement("button");
         add.type = "submit";
-        add.textContent = "Add Project";
+        add.textContent = "Add";
         add.addEventListener("click", (event) => {
             event.preventDefault();
             addCallback(input.value);

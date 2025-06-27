@@ -7,6 +7,7 @@ export default class Task {
         this.isComplete = isComplete;       // boolean
         this.projectId = projectId;
         this.projectName = projectName;
+        console.log(id);
         if (id === null) {
             this.id = crypto.randomUUID();
         } else {
